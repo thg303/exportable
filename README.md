@@ -89,6 +89,16 @@ Note: *If your model method contains query to association please be carefull to 
 ```ruby
 Article.includes(:user).export methods: [:user_name]   
 ```
+
+###:reference
+By default export would call the attributes default getter. if you need to format the value of a field, you may 
+use a decorator (like [draper gem](https://github.com/drapergem/draper)) to format the values as you like and then pass 
+the decorated object using this option.
+```ruby
+Article.export reference: decorated_articles
+```
+
+
 ## Testing
  This plugin uses [Rspec](https://rspec.info/) for testing. Go to gem folder and run:
  

@@ -11,31 +11,42 @@ describe 'Export XLS' do
     expect(ExportableModel.respond_to? 'export_xls').to be_truthy 
   end
 
-  it "exports csv data" do
+  it "exports xls data" do
     ExportableModel.class_eval{ exportable }
     sheet = write_xls
     expect(sheet.row(1)[1]).to eq 'sample string'
   end
   
-  it "exports csv data with 'only' option" do
+  it "exports xls data with 'only' option" do
     ExportableModel.class_eval{ exportable only: [:field_string] }
     sheet = write_xls
     expect(sheet.row(0)).not_to include('field_text')  
   end
 
-  it "exports csv data with 'except' option" do
+  it "exports xls data with 'except' option" do
     ExportableModel.class_eval{ exportable except: [:field_string] }
     sheet = write_xls
     expect(sheet.row(0)).not_to include('field_string')  
   end
 
-  it "exports csv data with 'header' option" do
+  it "exports xls data with 'header' option" do
     ExportableModel.class_eval{ exportable header: false }
     sheet = write_xls
     expect(sheet.row(0)).not_to include('field_string')  
   end
 
-  it "exports csv data with 'methods' option" do
+  it "exports xls data with 'reference' option" do
+    ExportableModel.class_eval{ exportable only: [:field_date, :field_text] }
+    model = ExportableModel.create!(field_date: Date.new(2021, 1, 4), field_text: 'this is it')
+    formatted_date = model.field_date.strftime('%D')
+    reference = instance_double('exportable_model', field_text: model.field_text.upcase, field_date: formatted_date)
+    sheet = write_xls reference: reference
+
+    expect(sheet.row(1)[0]).to eq('01/04/21')
+    expect(sheet.row(1)[1]).to eq(reference.field_text)
+  end
+
+  it "exports xls data with 'methods' option" do
     ExportableModel.class_eval do  
       exportable methods: [:title]
       def title

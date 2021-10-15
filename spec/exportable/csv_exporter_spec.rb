@@ -42,6 +42,17 @@ describe 'Export CSV' do
     expect(csv.headers).not_to include('field_string')  
   end
 
+  it "exports csv data with 'reference' option" do
+    ExportableModel.class_eval{ exportable only: [:field_date, :field_text] }
+    model = ExportableModel.create!(field_date: Date.new(2021, 1, 4), field_text: 'this is it')
+    formatted_date = model.field_date.strftime('%D')
+    reference = instance_double('exportable_model', field_text: model.field_text.upcase, field_date: formatted_date)
+    csv = CSV.parse(ExportableModel.export_csv(reference: reference), headers: true)
+
+    expect(csv[-1]['field_date']).to eq('01/04/21')
+    expect(csv[-1]['field_text']).to eq(reference.field_text)
+  end
+
   it "exports csv data with 'methods' option" do
     ExportableModel.class_eval do  
       exportable methods: [:title]
