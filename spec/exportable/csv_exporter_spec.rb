@@ -27,12 +27,7 @@ describe 'Export CSV' do
   it "exports properly quote data" do
     ExportableModel.class_eval{ exportable }
     ExportableModel.create!(field_string: '0123')
-    quoter = Proc.new do |field|
-      field = '"' + field + '"' if field == '0123'
-      field
-    end
-    options = { csv_options: { quote_char: '', write_converters: [quoter] } }
-    csv = ExportableModel.export_csv(options)
+    csv = ExportableModel.export_csv
     expect(csv).to include('"0123"')
   end
 

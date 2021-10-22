@@ -95,9 +95,16 @@ By default export would call the attributes default getter. if you need to forma
 use a decorator (like [draper gem](https://github.com/drapergem/draper)) to format the values as you like and then pass 
 the decorated object using this option.
 ```ruby
-Article.export reference: decorated_articles
+Article.export(:csv, { reference: decorated_articles })
 ```
 
+###:csv_options
+By default export_csv would quote all fields that contain only numbers started with zero (like '0123') or contain ','
+to override this, simply pass a hash to this option, it accepts all options that `CSV.generate` accepts (see 
+[documentations](https://ruby-doc.org/stdlib-3.0.2/libdoc/csv/rdoc/CSV.html#class-CSV-label-Options+for+Generating))
+```ruby
+Article.export(:csv, { csv_options: { quote_char: '*', force_quote: true } })
+```
 
 ## Testing
  This plugin uses [Rspec](https://rspec.info/) for testing. Go to gem folder and run:
