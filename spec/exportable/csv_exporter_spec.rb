@@ -19,9 +19,21 @@ describe 'Export CSV' do
 
   it "exports properly encode data" do
     ExportableModel.class_eval{ exportable }
-    ExportableModel.create!(field_string: "sample st,ring")
+    ExportableModel.create!(field_string: 'sample st,ring')
     csv = CSV.parse(ExportableModel.export_csv, headers: true)
     expect(csv[-1]['field_string']).to eq 'sample st,ring' 
+  end
+
+  it "exports properly quote data" do
+    ExportableModel.class_eval{ exportable }
+    ExportableModel.create!(field_string: '0123')
+    quoter = Proc.new do |field|
+      field = '"' + field + '"' if field == '0123'
+      field
+    end
+    options = { csv_options: { quote_char: '', write_converters: [quoter] } }
+    csv = ExportableModel.export_csv(options)
+    expect(csv).to include('"0123"')
   end
 
   it "exports csv data with 'only' option" do

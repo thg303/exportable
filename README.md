@@ -105,7 +105,10 @@ Article.export reference: decorated_articles
  You would need to setup the [sqlite](https://www.sqlite.org/) database using the following commands:
  ```bash
  bundle install
+ cd spec/dummy
+ ./bin/rails db:environment:set RAILS_ENV=test
  RAILS_ENV=test bundle exec rake db:setup
+ RAILS_ENV=test bundle exec rake db:migrate
  ```
  And finally run the test suite with:
  ```bash

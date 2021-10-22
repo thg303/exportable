@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
   
   s.add_dependency 'activerecord', ['>= 4.0']
+  s.add_dependency 'csv', ['>= 3.2.0']
   s.add_dependency 'spreadsheet'
   s.add_dependency 'nokogiri'
   
